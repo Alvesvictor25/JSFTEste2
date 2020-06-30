@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<head>
+    <h:outputStylesheet library="webjars" name="font-awesome/4.7.0/css/font-awesome.min-jsf.css" />
+</head>
+<ui:composition template="/templates/modelo.xhtml">
+
+    <ui:define name="menu">
+        <ui:include src="/includes/menu.xhtml"/>
+    </ui:define>
+
+    <ui:define name="conteudo">
+
+
+        <h:form id="frmfornecedores">
+            <p:messages id ="msgGlobal" autoUpdate="true" showDetail="true"></p:messages>
+            <p:spacer width="15px"/>
+            <p:fieldset legend="Fornecedores">
+                <p:panelGrid columns="4">
+                    <p:outputLabel for="descricao" value="Descrição"/>
+                    <p:inputText id="descricao" value="#{fornecedoresBean.fornecedores.descricao}"></p:inputText>
+                </p:panelGrid>
+
+                <p:spacer width="20px"/>
+                <p:dataTable value="#{fornecedoresBean.listaTodosOsFornecedores}" var="fornecedores"
+                             emptyMessage="Nenhum registro encontrado." paginator="true" rows="5"
+                             paginatorPosition="bottom" rowsPerPageTemplate="1,2,3,4"
+                             id="tbfornecedores">
+                    <p:column>
+                        <p:commandButton icon="ui-icon-pencil" value="Editar"
+                                         process="@this" update="@form" action="#{fornecedoresBean.abrirDialogEditar(fornecedores)}">
+                            <f:setPropertyActionListener target="#{fornecedoresBean.fornecedoresEditado}" value="#{fornecedores}" />
+                        </p:commandButton>
+
+                        <p:commandButton icon="ui-icon-trash" value="Deletar" action="#{fornecedoresBean.delete(fornecedores)}"
+                                         process="@this" update="@form">
+                            <p:confirm header="Deletar fornecedor" message="Tem certeza que vai deletar ? não chora depois"/>
+                        </p:commandButton>
+                        <p:confirmDialog global="true" align="center">
+                            <p:commandButton value="Sim"  styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>
+                            <p:commandButton value="Não" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>
+                        </p:confirmDialog>
+                    </p:column>
+                    <p:column headerText="Código" sortBy="#{fornecedores.codigo}" filterBy="#{fornecedores.codigo}">
+                        <h:outputText value="#{fornecedores.codigo}"></h:outputText>
+                    </p:column>
+                    <p:column headerText="Descrição" sortBy="#{fornecedores.descricao}" filterBy="#{fornecedores.descricao}">
+                        <h:outputText value="#{fornecedores.descricao}"></h:outputText>
+                    </p:column>
+                </p:dataTable>
+                <hr/>
+                <p:spacer width="10px"/>
+
+                <p:toolbar>
+                    <p:toolbarGroup >
+                        <p:commandButton icon="fa fa-user-plus" value="Adicionar" action="#{fornecedoresBean.adicionar()}"
+                                         update="@form"></p:commandButton>
+                    </p:toolbarGroup>
+                </p:toolbar>
+            </p:fieldset>
+
+            <p:dialog header="Cadastrar Fornecedor" widgetVar="fornecedorDg" draggable="false"
+                      showEffect="blind" hideEffect="fade" resizable="false"
+                      modal="true"
+            appendTo="@(body)">
+
+                <h:panelGrid id="display" columns="2" cellpadding="4">
+
+                    <h:outputText value="Código"/>
+                    <h:inputText value="#{fornecedoresBean.fornecedores.codigo}"/>
+
+                    <h:outputText value="Descrição"/>
+                    <h:inputText value="#{fornecedoresBean.fornecedores.descricao}"/>
+
+                    <p:commandButton value="Editar" action="#{fornecedoresBean.editar(fornecedores)}"
+                    />
+                    <p:commandButton value="Cancelar" onclick='PF("fornecedorDg").hide()'/>
+                </h:panelGrid>
+            </p:dialog>
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>
+
+
+</html>

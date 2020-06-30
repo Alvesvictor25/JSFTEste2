@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/templates/modelo.xhtml">
+
+    <ui:define name="menu">
+        <ui:include src="/includes/menu.xhtml"/>
+    </ui:define>
+
+    <ui:define name="conteudo">
+
+
+        <h:form>
+            <p:messages autoUpdate="true" showDetail="true"></p:messages>
+            <p:spacer width="15px"/>
+            <p:fieldset legend="Produtos">
+                <p:panelGrid columns="10">
+                    <p:outputLabel for="descricao" value="Descrição"/>
+                    <p:inputText id="descricao" value="#{produtosBean.produtos.descricao}"></p:inputText>
+                    <p:outputLabel for="valor" value="Valor"/>
+                    <p:inputText id="valor" value="#{produtosBean.produtos.valor}">
+                        <f:convertNumber pattern="R$ #,##0.00"></f:convertNumber>
+                    </p:inputText>
+                    <p:outputLabel for="quantidade" value="Quantidade"/>
+                    <p:inputText id="quantidade" value="#{produtosBean.produtos.quantidade}"></p:inputText>
+                    <p:outputLabel value="Fornecedor"/>
+                    <h:panelGroup>
+                        <p:inputText id="fornecedor" value="#{produtosBean.produtos.fornecedores.descricao}" readonly="true"/>
+                        <p:commandButton icon="ui-icon-search" title="Pesquisa"
+                                         action="#{produtosBean.abrirDialog}" process="@none"
+                                         update="@form">
+                            <p:ajax event="dialogReturn" listener="#{produtosBean.fornecedorSelecionado}" process="@this" update="fornecedor"/>
+                        </p:commandButton>
+                    </h:panelGroup>
+
+                </p:panelGrid>
+
+                <p:spacer width="20px"/>
+                <p:dataTable value="#{produtosBean.listaTodosProdutos}" var="produtos" emptyMessage="Nenhum registro encontrado."
+                             paginator="true" rows="5"
+                             paginatorPosition="bottom" rowsPerPageTemplate="1,2,3,4">
+                    <p:column>
+                        <p:commandButton icon="ui-icon-pencil" value="Editar" process="@this"
+                                action="#{produtosBean.abrirDialogEditar(produtos)}">
+                            <f:setPropertyActionListener value="#{produtos}" target="#{produtosBean.produtosEditado}"/>
+                        </p:commandButton>
+
+                        <p:commandButton icon="ui-icon-trash" value="Deletar" action="#{produtosBean.delete(produtos)}"
+                                       process="@this" update="@form">
+                            <p:confirm header="Deletar produto" message="Tem certeza que vai deletar, jogadô?"/>
+                        </p:commandButton>
+                        <p:confirmDialog global="true">
+                            <p:commandButton value="Sim" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>
+                            <p:commandButton value="Não" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>
+                        </p:confirmDialog>
+                    </p:column>
+                    <p:column headerText="Código">
+                        <h:outputText value="#{produtos.codigo}"></h:outputText>
+                    </p:column>
+                    <p:column headerText="Descrição">
+                        <h:outputText value="#{produtos.descricao}"></h:outputText>
+                    </p:column>
+                    <p:column headerText="Valor">
+                        <h:outputText value="#{produtos.valor}"></h:outputText>
+                    </p:column>
+                    <p:column headerText="Quantidade">
+                        <h:outputText value="#{produtos.quantidade}"></h:outputText>
+                    </p:column>
+                    <p:column headerText="Fornecedores">
+                        <h:outputText value="#{produtos.fornecedores.descricao}"></h:outputText>
+                    </p:column>
+                </p:dataTable>
+                <hr/>
+                <p:spacer width="10px"/>
+
+                <p:toolbar>
+                    <p:toolbarGroup>
+                        <p:commandButton value="Adicionar" action="#{produtosBean.adicionar}" update="@form"></p:commandButton>
+                    </p:toolbarGroup>
+                </p:toolbar>
+            </p:fieldset>
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>
+
+
+</html>

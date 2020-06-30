@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+    <title>Selecionar fornecedor</title>
+    <h:outputStylesheet library="css" name="style.css"/>
+</h:head>
+<h:body>
+    <h:form>
+        <div style="margin-top: 5px; margin-bottom: 20px; height: 200px">
+            <p:inputText id="nome" size="40" value="#{fornecedoresBean.pesquisaDescricao}" placeholder="Descrição fornecedor" style="margin-top: 7px; margin-left: 5px"></p:inputText>
+
+            <p:spacer width="10px"/>
+
+           <p:commandButton value="Pesquisar"  style="margin-top: 10px" action="#{fornecedoresBean.pesquisar()}" update="@form"/>
+
+
+
+            <p:dataTable value="#{fornecedoresBean.listaTodosOsFornecedores}" var="fornecedor"
+                         emptyMessage="Nenhum produto encontrado." rows="6" paginator="true"
+                         paginatorAlwaysVisible="true" paginatorPosition="bottom" style="margin-top: 7px">
+                <p:column headerText="Código" style="text-align: center; width: 40px">
+                    <h:outputText value="#{fornecedor.codigo}"/>
+                </p:column>
+                <p:column headerText="Descrição">
+                    <h:outputText value="#{fornecedor.descricao}"/>
+                </p:column>
+                <p:column style="width: 30px; text-align: center">
+                    <p:commandButton icon="ui-icon-check" title="Selecionar"
+                    action="#{fornecedoresBean.selecionar(fornecedor)}" process="@this"/>
+                </p:column>
+            </p:dataTable>
+        </div>
+
+
+    </h:form>
+</h:body>
+</html>
